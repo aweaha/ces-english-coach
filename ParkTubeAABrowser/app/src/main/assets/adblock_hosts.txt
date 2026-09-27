@@ -1,0 +1,9 @@
+doubleclick.net
+googleadservices.com
+googlesyndication.com
+google-analytics.com
+adservice.google.com
+ads.youtube.com
+pagead2.googlesyndication.com
+securepubads.g.doubleclick.net
+stats.g.doubleclick.net
