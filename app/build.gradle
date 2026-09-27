@@ -1,0 +1,30 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.ces.englishcoach'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.ces.englishcoach'
+        minSdk 26
+        targetSdk 35
+        versionCode 6
+        versionName '1.3.0'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = '17' }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+    implementation 'dev.ffmpegkit-maintained:whisper-android:1.0.0'
+    implementation 'com.google.mlkit:translate:17.0.3'
+}
