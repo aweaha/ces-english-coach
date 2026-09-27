@@ -9,9 +9,8 @@
         android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|uiMode"
-            android:exported="true"
-            android:screenOrientation="sensorLandscape">
+            android:configChanges="keyboard|keyboardHidden|uiMode"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
