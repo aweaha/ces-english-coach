@@ -33,21 +33,13 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract project
-        run: |
-          rm -rf build-src
-          mkdir build-src
-          unzip -q source/CES-English-Coach-v6.zip -d build-src
-          test -f build-src/CES-English-Coach-v6/settings.gradle
-
       - name: Build debug APK
-        working-directory: build-src/CES-English-Coach-v6
         run: gradle --stacktrace assembleDebug
 
       - name: Collect APK
         run: |
           mkdir -p output
-          cp build-src/CES-English-Coach-v6/app/build/outputs/apk/debug/app-debug.apk output/CES-English-Coach.apk
+          cp app/build/outputs/apk/debug/app-debug.apk output/CES-English-Coach.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
