@@ -5,8 +5,10 @@
 
     <application
         android:allowBackup="true"
-        android:label="CES English Coach"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:label="PWK English Coach"
+        android:icon="@drawable/pwk_icon"
+        android:roundIcon="@drawable/pwk_icon"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"

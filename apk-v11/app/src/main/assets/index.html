@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>CES English Coach 40 Lessons</title>
+<title>PWK English Coach 40 Lessons</title>
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#74809a;--line:#e5eaf2;--navy:#173b73;--blue:#2b65f6;--blueSoft:#eef4ff;--orange:#f48b26;--orangeSoft:#fff4e8;--green:#18a36b;--greenSoft:#eaf9f2;--purple:#7b57d1;--purpleSoft:#f4efff;--danger:#e24d4d;--shadow:0 12px 34px rgba(31,50,80,.08)}
 *{box-sizing:border-box} body{margin:0;background:#dfe7f2;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;color:var(--text)} button,input,select{font:inherit}
@@ -42,6 +42,13 @@ main{padding:14px 16px 96px}.hidden{display:none!important}.card{background:var(
 .lessonSummary{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .lessonSummary .pill{font-size:11px}
 .emptyKo{display:none}
+
+.pwk-brand-wrap{display:flex;align-items:center;gap:12px;margin:4px 0 14px}
+.pwk-brand-icon{width:58px;height:58px;border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.pwk-brand-text{display:flex;flex-direction:column;gap:2px}
+.pwk-brand-text b{font-size:18px;letter-spacing:.2px}
+.pwk-brand-text span{font-size:12px;color:#dbe6ff}
+.pwk-fab-logo{position:fixed;top:14px;right:14px;z-index:40;width:44px;height:44px;border-radius:14px;box-shadow:0 8px 20px rgba(17,27,48,.22);opacity:.96}
 </style>
 </head>
 <body>
@@ -402,4 +409,21 @@ if('speechSynthesis' in window){refreshVoices();speechSynthesis.addEventListener
 renderHome();renderLessons();updateStats();updateBackLabels();setTimeout(showGuide,250);
 
 </script>
-</body></html>
+<script id="pwk-brand-patch">
+(function(){
+  function injectBrand(){
+    var homeCard=document.querySelector('#home .card');
+    if(homeCard && !document.getElementById('pwkHomeBrand')){
+      var brand=document.createElement('div');
+      brand.id='pwkHomeBrand'; brand.className='pwk-brand-wrap';
+      brand.innerHTML='<img class="pwk-brand-icon" src="pwk_icon.webp" alt="PWK"><div class="pwk-brand-text"><b>PWK English Coach</b><span>British conversation trainer</span></div>';
+      homeCard.insertBefore(brand,homeCard.firstElementChild);
+    }
+    if(!document.getElementById('pwkFabLogo')){
+      var fab=document.createElement('img'); fab.id='pwkFabLogo'; fab.className='pwk-fab-logo'; fab.src='pwk_icon.webp'; fab.alt='PWK'; document.body.appendChild(fab);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',injectBrand);else injectBrand();
+  setTimeout(injectBrand,400);
+})();
+</script></body></html>
