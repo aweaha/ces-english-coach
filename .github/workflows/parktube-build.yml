@@ -22,6 +22,6 @@ jobs:
         run: gradle -p ParkTubeAABrowser assembleDebug --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: ParkTube-PWK-2.2.0
+          name: ParkTube-PWK-2.3.0
           path: ParkTubeAABrowser/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
