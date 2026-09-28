@@ -25,6 +25,7 @@ jobs:
         run: |
           ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}"
           SDKMANAGER="$(find "$ANDROID_SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
+          echo "Using sdkmanager: $SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
           echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
@@ -35,7 +36,7 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build v11 debug APK
+      - name: Build debug APK
         working-directory: apk-v11
         run: gradle --stacktrace assembleDebug
 
