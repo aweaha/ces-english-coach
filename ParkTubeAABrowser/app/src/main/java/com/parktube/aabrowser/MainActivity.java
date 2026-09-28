@@ -257,6 +257,11 @@ public class MainActivity extends Activity {
     sp.rightMargin = dp(8);
     row.addView(box, sp);
 
+    ImageButton searchBtn = buildSearchButton();
+    LinearLayout.LayoutParams searchLp = new LinearLayout.LayoutParams(dp(46), dp(46));
+    searchLp.rightMargin = dp(6);
+    row.addView(searchBtn, searchLp);
+
     row.addView(buildOrientationButton(), new LinearLayout.LayoutParams(dp(46), dp(46)));
     LinearLayout.LayoutParams slp = new LinearLayout.LayoutParams(dp(46), dp(46));
     slp.leftMargin = dp(6);
@@ -270,6 +275,10 @@ public class MainActivity extends Activity {
     row.setPadding(dp(12), dp(2), dp(12), dp(4));
     search = createSearchBox();
     row.addView(search, new LinearLayout.LayoutParams(0, dp(46), 1));
+    ImageButton searchBtn = buildSearchButton();
+    LinearLayout.LayoutParams searchLp = new LinearLayout.LayoutParams(dp(46), dp(46));
+    searchLp.leftMargin = dp(7);
+    row.addView(searchBtn, searchLp);
     return row;
   }
 
@@ -291,6 +300,26 @@ public class MainActivity extends Activity {
       return false;
     });
     return e;
+  }
+
+  ImageButton buildSearchButton() {
+    ImageButton b = new ImageButton(this);
+    b.setImageResource(android.R.drawable.ic_menu_search);
+    b.setColorFilter(TEXT);
+    b.setBackground(gradient(Color.rgb(0, 103, 188), Color.rgb(0, 154, 255), 12));
+    b.setPadding(dp(10), dp(10), dp(10), dp(10));
+    b.setContentDescription("검색");
+    b.setOnClickListener(v -> {
+      if (search != null) {
+        navigate(search.getText().toString());
+        try {
+          android.view.inputmethod.InputMethodManager imm =
+            (android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+          imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+        } catch (Exception ignored) {}
+      }
+    });
+    return b;
   }
 
   Button buildOrientationButton() {
