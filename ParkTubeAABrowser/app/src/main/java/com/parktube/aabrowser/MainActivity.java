@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
   WebView web;
   EditText search;
   ProgressBar progress;
-  Button fullscreenButton, playPauseButton;
+  Button playPauseButton;
   TextView driveTitle, driveTime;
   SeekBar driveSeek;
   WebChromeClient.CustomViewCallback customViewCallback;
@@ -196,16 +196,6 @@ public class MainActivity extends Activity {
     web = new WebView(this);
     web.setBackgroundColor(BG);
     webFrame.addView(web, new FrameLayout.LayoutParams(-1, -1));
-
-    fullscreenButton = button("⛶");
-    fullscreenButton.setTextSize(22);
-    fullscreenButton.setBackground(outlined(Color.argb(220, 15, 23, 32), 13, 2, PINK));
-    fullscreenButton.setVisibility(View.GONE);
-    fullscreenButton.setContentDescription("전체화면");
-    FrameLayout.LayoutParams fslp = new FrameLayout.LayoutParams(dp(54), dp(54), Gravity.RIGHT | Gravity.BOTTOM);
-    fslp.setMargins(0, 0, dp(14), dp(14));
-    webFrame.addView(fullscreenButton, fslp);
-    fullscreenButton.setOnClickListener(v -> toggleAppFullscreen());
 
     bottomNav = buildBottomNav();
     page.addView(bottomNav, new LinearLayout.LayoutParams(-1, dp(58)));
@@ -545,8 +535,6 @@ public class MainActivity extends Activity {
 
   void updateUrlUi(String url) {
     if (search != null && url != null) search.setText(url);
-    boolean video = url != null && (url.contains("/watch") || url.contains("/shorts/"));
-    if (!driveMode && !appFullscreen && customView == null) fullscreenButton.setVisibility(video ? View.VISIBLE : View.GONE);
   }
 
   void navigate(String raw) {
@@ -555,66 +543,6 @@ public class MainActivity extends Activity {
     if (q.startsWith("http://") || q.startsWith("https://")) web.loadUrl(q);
     else if (q.contains(".") && !q.contains(" ")) web.loadUrl("https://" + q);
     else web.loadUrl("https://m.youtube.com/results?search_query=" + Uri.encode(q));
-  }
-
-  void toggleAppFullscreen() {
-    if (driveMode) return;
-    if (customView != null) { hideCustomView(); return; }
-    if (appFullscreen) { exitAppFullscreen(); return; }
-
-    String js = "(function(){var v=document.querySelector('video');if(!v)return 'none';var p=v.closest('.html5-video-player,#movie_player,ytm-player,#player-container-id,.player-container')||v.parentElement;p.setAttribute('data-pwkfs','1');var s=document.getElementById('pwk-fs-css');if(!s){s=document.createElement('style');s.id='pwk-fs-css';s.textContent='html.pwkfs,html.pwkfs body{overflow:hidden!important;background:#000!important;}[data-pwkfs]{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;z-index:2147483645!important;background:#000!important;margin:0!important;padding:0!important;}[data-pwkfs] video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;background:#000!important;}';document.documentElement.appendChild(s);}document.documentElement.classList.add('pwkfs');return 'ok';})()";
-    web.evaluateJavascript(js, result -> {
-      if (result == null || !result.contains("ok")) {
-        Toast.makeText(this, "영상 재생 화면에서 사용해 주세요.", Toast.LENGTH_SHORT).show();
-        return;
-      }
-      appFullscreen = true;
-      chromeTop.setVisibility(View.GONE);
-      bottomNav.setVisibility(View.GONE);
-      progress.setVisibility(View.GONE);
-      showFullscreenClose();
-      enterImmersive();
-    });
-  }
-
-  void showFullscreenClose() {
-    fullscreenButton.setVisibility(View.VISIBLE);
-    fullscreenButton.setText("×");
-    fullscreenButton.setTextSize(24);
-    fullscreenButton.setBackground(rounded(Color.argb(205, 15, 25, 36), 24));
-    ViewGroup parent = (ViewGroup) fullscreenButton.getParent();
-    if (parent != root) {
-      if (parent != null) parent.removeView(fullscreenButton);
-      FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(dp(50), dp(50), Gravity.TOP | Gravity.RIGHT);
-      lp.setMargins(0, dp(14), dp(14), 0);
-      root.addView(fullscreenButton, lp);
-    }
-    fullscreenButton.bringToFront();
-  }
-
-  void restoreFullscreenButton() {
-    ViewGroup parent = (ViewGroup) fullscreenButton.getParent();
-    if (parent != webFrame) {
-      if (parent != null) parent.removeView(fullscreenButton);
-      FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(dp(54), dp(54), Gravity.RIGHT | Gravity.BOTTOM);
-      lp.setMargins(0, 0, dp(14), dp(14));
-      webFrame.addView(fullscreenButton, lp);
-    }
-    fullscreenButton.setText("⛶");
-    fullscreenButton.setTextSize(22);
-    fullscreenButton.setBackground(outlined(Color.argb(220, 15, 23, 32), 13, 2, PINK));
-    updateUrlUi(web.getUrl());
-  }
-
-  void exitAppFullscreen() {
-    if (!appFullscreen) return;
-    appFullscreen = false;
-    String js = "(function(){document.documentElement.classList.remove('pwkfs');document.querySelectorAll('[data-pwkfs]').forEach(function(e){e.removeAttribute('data-pwkfs');});var s=document.getElementById('pwk-fs-css');if(s)s.remove();})()";
-    web.evaluateJavascript(js, null);
-    chromeTop.setVisibility(View.VISIBLE);
-    bottomNav.setVisibility(View.VISIBLE);
-    exitImmersive();
-    restoreFullscreenButton();
   }
 
   void hideCustomView() {
