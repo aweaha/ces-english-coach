@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
   WebChromeClient.CustomViewCallback customCb; AdBlocker blocker; SharedPreferences prefs;
   boolean adblock=true,driveMode=false;
   int orientationMode=0;
-  Button orientationButton,fullscreenButton,driveButton,playPauseButton;
+  Button orientationButton,fullscreenButton,driveButton,playPauseButton; LinearLayout topBar; boolean appFullscreen=false;
 
   final String cleanJs="(function(){try{var css='ytm-promoted-video-renderer,ytd-display-ad-renderer,ytd-promoted-sparkles-web-renderer,ytd-ad-slot-renderer,ytd-in-feed-ad-layout-renderer,.ytp-ad-overlay-container,.ytp-ad-image-overlay,.video-ads,.ytp-ad-text-overlay{display:none!important;}';var s=document.getElementById('pt-style');if(!s){s=document.createElement('style');s.id='pt-style';s.textContent=css;document.documentElement.appendChild(s);}function c(){try{var q=['.ytp-ad-skip-button','.ytp-ad-skip-button-modern','.ytp-skip-ad-button','button[class*=skip]'];for(var i=0;i<q.length;i++){var b=document.querySelector(q[i]);if(b){b.click();break;}}document.querySelectorAll('ytm-promoted-video-renderer,ytd-display-ad-renderer,ytd-promoted-sparkles-web-renderer,ytd-ad-slot-renderer,ytd-in-feed-ad-layout-renderer,.ytp-ad-overlay-container').forEach(function(e){e.remove();});}catch(e){}}c();if(!window.__ptTimer)window.__ptTimer=setInterval(c,700);}catch(e){}})();";
 
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
     LinearLayout outer=new LinearLayout(this);outer.setOrientation(LinearLayout.VERTICAL);outer.setBackgroundColor(Color.BLACK);
     root.addView(outer,new FrameLayout.LayoutParams(-1,-1));
 
-    LinearLayout top=new LinearLayout(this);top.setGravity(Gravity.CENTER_VERTICAL);
+    topBar=new LinearLayout(this); LinearLayout top=topBar;top.setGravity(Gravity.CENTER_VERTICAL);
     top.setPadding(dp(5),dp(4),dp(5),dp(4));top.setBackgroundColor(Color.rgb(12,18,24));
     outer.addView(top,new LinearLayout.LayoutParams(-1,dp(portrait()?54:56)));
 
@@ -212,7 +212,53 @@ public class MainActivity extends Activity {
   void toggleFullscreen(){
     if(driveMode)return;
     if(custom!=null){hideCustom();return;}
-    web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v){if(v.requestFullscreen){v.requestFullscreen();return 'video';}if(v.webkitEnterFullscreen){v.webkitEnterFullscreen();return 'video';}}return 'none';})()",r->{});
+    if(appFullscreen){exitAppFullscreen();return;}
+    tryNativeFullscreen();
+  }
+
+  void tryNativeFullscreen(){
+    String js="(function(){try{var q=['.ytp-fullscreen-button','button.ytp-fullscreen-button','button[aria-label*=\\\"full screen\\\" i]','button[aria-label*=\\\"전체 화면\\\"]','.fullscreen-icon'];for(var i=0;i<q.length;i++){var b=document.querySelector(q[i]);if(b){var r=b.getBoundingClientRect();if(r.width>0&&r.height>0)return JSON.stringify({x:r.left+r.width/2,y:r.top+r.height/2});}}var v=document.querySelector('video');if(v&&v.webkitEnterFullscreen){try{v.webkitEnterFullscreen();return 'webkit';}catch(e){}}return 'fallback';}catch(e){return 'fallback';}})()";
+    web.evaluateJavascript(js,result->{
+      boolean touched=false;
+      try{
+        if(result!=null&&result.startsWith("\\"{")&&result.endsWith("}\\"")){
+          String json=result.substring(1,result.length()-1).replace("\\\\"","\\\"");
+          org.json.JSONObject o=new org.json.JSONObject(json);
+          float scale=web.getScale();
+          float x=(float)o.getDouble("x")*scale;
+          float y=(float)o.getDouble("y")*scale;
+          long now=android.os.SystemClock.uptimeMillis();
+          MotionEvent down=MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,x,y,0);
+          MotionEvent up=MotionEvent.obtain(now,now+60,MotionEvent.ACTION_UP,x,y,0);
+          web.dispatchTouchEvent(down);web.dispatchTouchEvent(up);down.recycle();up.recycle();
+          touched=true;
+        }
+      }catch(Exception ignored){}
+      final boolean attemptedTouch=touched;
+      web.postDelayed(()->{
+        if(custom==null&&!appFullscreen)enterAppFullscreen();
+      },attemptedTouch?550:120);
+    });
+  }
+
+  void enterAppFullscreen(){
+    if(driveMode||custom!=null)return;
+    appFullscreen=true;
+    if(topBar!=null)topBar.setVisibility(View.GONE);
+    if(progress!=null)progress.setVisibility(View.GONE);
+    String js="(function(){try{var v=document.querySelector('video');if(!v)return 'none';v.dataset.ptHadControls=v.hasAttribute('controls')?'1':'0';v.setAttribute('controls','controls');var p=v.closest('.html5-video-player,#player-container-id,ytm-player,.player-container')||v.parentElement||v;p.setAttribute('data-ptfs','1');var s=document.getElementById('pt-fs-style');if(!s){s=document.createElement('style');s.id='pt-fs-style';s.textContent='[data-ptfs=\\\"1\\\"]{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;z-index:2147483646!important;background:#000!important;margin:0!important;padding:0!important;}[data-ptfs=\\\"1\\\"] video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;background:#000!important;}';document.documentElement.appendChild(s);}return 'ok';}catch(e){return 'error';}})()";
+    web.evaluateJavascript(js,null);
+    fullscreenButton.setText("×");fullscreenButton.bringToFront();immersive();
+  }
+
+  void exitAppFullscreen(){
+    if(!appFullscreen)return;
+    appFullscreen=false;
+    String js="(function(){try{document.querySelectorAll('[data-ptfs]').forEach(function(e){e.removeAttribute('data-ptfs');});var s=document.getElementById('pt-fs-style');if(s)s.remove();var v=document.querySelector('video');if(v&&v.dataset.ptHadControls==='0')v.removeAttribute('controls');if(v)delete v.dataset.ptHadControls;}catch(e){}})()";
+    web.evaluateJavascript(js,null);
+    if(topBar!=null)topBar.setVisibility(View.VISIBLE);
+    fullscreenButton.setText("⛶");
+    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
   }
 
   @SuppressLint("SetJavaScriptEnabled") void configure(){
