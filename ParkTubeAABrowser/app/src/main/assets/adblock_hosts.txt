@@ -1,9 +1,14 @@
 doubleclick.net
-googleadservices.com
 googlesyndication.com
+googleadservices.com
 google-analytics.com
 adservice.google.com
+adservice.google.co.kr
 ads.youtube.com
 pagead2.googlesyndication.com
 securepubads.g.doubleclick.net
 stats.g.doubleclick.net
+googleads.g.doubleclick.net
+imasdk.googleapis.com
+partner.googleadservices.com
+tpc.googlesyndication.com

@@ -3,8 +3,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/pwk_launcher_v2"
+        android:roundIcon="@mipmap/pwk_launcher_round_v2"
         android:label="ParkTube"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar"
@@ -12,11 +12,19 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|uiMode"
-            android:exported="true">
+            android:exported="true" />
+        <activity-alias
+            android:name=".PWKLauncher"
+            android:targetActivity=".MainActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/pwk_launcher_v2"
+            android:roundIcon="@mipmap/pwk_launcher_round_v2"
+            android:label="ParkTube">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
     </application>
 </manifest>
