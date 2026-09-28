@@ -217,27 +217,11 @@ public class MainActivity extends Activity {
   }
 
   void tryNativeFullscreen(){
-    String js="(function(){try{var q=['.ytp-fullscreen-button','button.ytp-fullscreen-button','button[aria-label*=\\\"full screen\\\" i]','button[aria-label*=\\\"전체 화면\\\"]','.fullscreen-icon'];for(var i=0;i<q.length;i++){var b=document.querySelector(q[i]);if(b){var r=b.getBoundingClientRect();if(r.width>0&&r.height>0)return JSON.stringify({x:r.left+r.width/2,y:r.top+r.height/2});}}var v=document.querySelector('video');if(v&&v.webkitEnterFullscreen){try{v.webkitEnterFullscreen();return 'webkit';}catch(e){}}return 'fallback';}catch(e){return 'fallback';}})()";
+    String js="(function(){try{var q=['.ytp-fullscreen-button','button.ytp-fullscreen-button','button[aria-label*=fullscreen i]','button[aria-label*=전체]','.fullscreen-icon'];for(var i=0;i<q.length;i++){var b=document.querySelector(q[i]);if(b){b.click();return 'clicked';}}var v=document.querySelector('video');if(v&&v.webkitEnterFullscreen){try{v.webkitEnterFullscreen();return 'webkit';}catch(e){}}if(v&&v.requestFullscreen){try{var p=v.requestFullscreen();return 'requested';}catch(e){}}return 'fallback';}catch(e){return 'fallback';}})()";
     web.evaluateJavascript(js,result->{
-      boolean touched=false;
-      try{
-        if(result!=null&&result.startsWith("\\"{")&&result.endsWith("}\\"")){
-          String json=result.substring(1,result.length()-1).replace("\\\\"","\\\"");
-          org.json.JSONObject o=new org.json.JSONObject(json);
-          float scale=web.getScale();
-          float x=(float)o.getDouble("x")*scale;
-          float y=(float)o.getDouble("y")*scale;
-          long now=android.os.SystemClock.uptimeMillis();
-          MotionEvent down=MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,x,y,0);
-          MotionEvent up=MotionEvent.obtain(now,now+60,MotionEvent.ACTION_UP,x,y,0);
-          web.dispatchTouchEvent(down);web.dispatchTouchEvent(up);down.recycle();up.recycle();
-          touched=true;
-        }
-      }catch(Exception ignored){}
-      final boolean attemptedTouch=touched;
       web.postDelayed(()->{
         if(custom==null&&!appFullscreen)enterAppFullscreen();
-      },attemptedTouch?550:120);
+      },650);
     });
   }
 
