@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>CES English Coach Prototype v6</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#74809a;--line:#e5eaf2;--navy:#173b73;--blue:#2b65f6;--blueSoft:#eef4ff;--orange:#f48b26;--orangeSoft:#fff4e8;--green:#18a36b;--greenSoft:#eaf9f2;--purple:#7b57d1;--purpleSoft:#f4efff;--danger:#e24d4d;--shadow:0 12px 34px rgba(31,50,80,.08)}
+*{box-sizing:border-box} body{margin:0;background:#dfe7f2;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;color:var(--text)} button,input,select{font:inherit}
+#phone{width:min(100%,430px);min-height:100vh;margin:0 auto;background:var(--bg);position:relative;box-shadow:0 0 60px rgba(18,36,64,.18)}
+header{position:sticky;top:0;z-index:20;background:rgba(244,247,251,.94);backdrop-filter:blur(14px);padding:18px 18px 10px;border-bottom:1px solid rgba(229,234,242,.8)}
+.brand{display:flex;justify-content:space-between;align-items:center}.brand h1{font-size:20px;margin:0;font-weight:850;letter-spacing:-.4px}.iconBtn{width:38px;height:38px;border:0;background:white;border-radius:12px;box-shadow:var(--shadow);cursor:pointer}
+main{padding:14px 16px 96px}.hidden{display:none!important}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}.eyebrow{font-size:12px;color:var(--blue);font-weight:800;letter-spacing:.8px}.title{font-size:25px;font-weight:900;line-height:1.18;margin:6px 0}.sub{font-size:14px;color:var(--muted);line-height:1.6}.primary{width:100%;border:0;border-radius:16px;background:linear-gradient(135deg,#2b65f6,#1e4fd0);color:#fff;font-weight:800;padding:15px 18px;cursor:pointer}.secondary{border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text);font-weight:750;padding:11px 14px;cursor:pointer}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#eef2f8;color:#53617b;font-size:12px;font-weight:750}.progress{height:8px;background:#edf1f6;border-radius:999px;overflow:hidden}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#2b65f6,#4b84ff);border-radius:999px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.stat{background:#f8faff;border:1px solid #edf1f6;border-radius:16px;padding:12px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
+.sectionHead{display:flex;align-items:end;justify-content:space-between;margin:18px 2px 10px}.sectionHead h2{margin:0;font-size:17px}.sectionHead button{border:0;background:none;color:var(--blue);font-weight:750;cursor:pointer}
+.lessonRow{display:flex;gap:12px;align-items:center;padding:14px;background:white;border:1px solid var(--line);border-radius:18px;margin-bottom:9px;cursor:pointer}.lessonNum{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:#eff4ff;color:var(--blue);font-weight:900}.lessonMeta{flex:1;min-width:0}.lessonMeta b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lessonMeta span{font-size:12px;color:var(--muted)}.chev{color:#9aa5ba;font-size:20px}
+.search{width:100%;border:1px solid var(--line);border-radius:15px;padding:13px 14px;background:#fff;outline:none;margin-bottom:12px}
+.back{border:0;background:none;padding:0 0 10px;color:var(--navy);font-weight:800;cursor:pointer}.module{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line);cursor:pointer}.module:last-child{border-bottom:0}.moduleIcon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#f1f5fb;font-size:19px}.module b{display:block;font-size:14px}.module span{font-size:12px;color:var(--muted)}
+.dialogueToolbar{display:flex;gap:8px;overflow:auto;padding:4px 0 10px}.dialogueToolbar button{white-space:nowrap}
+.dialogueSelector{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 14px}.dialogueSelector button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 6px;font-weight:800;font-size:12px;cursor:pointer}.dialogueSelector button.active{background:var(--blueSoft);border-color:#b8ccff;color:var(--blue)}
+.listenPanel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;margin:4px 0 14px;box-shadow:var(--shadow)}.listenMain{display:grid;grid-template-columns:minmax(62px,1fr) 48px 48px 48px minmax(62px,1fr);align-items:center;gap:6px;width:100%;white-space:nowrap}.listenMain .secondary{min-width:0;padding-left:7px;padding-right:7px}.listenMain .transportBtn{width:48px;height:48px;padding:0;border-radius:50%;font-size:21px;display:inline-grid;place-items:center}.listenMain .transportBtn:focus-visible{outline:3px solid rgba(43,101,246,.3);outline-offset:2px}.seekBtn{font-weight:900;font-size:12px}.fullProgress{width:100%;accent-color:var(--blue);margin:11px 0 3px}.progressMeta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}.listenOptions{display:grid;grid-template-columns:repeat(6,max-content);justify-content:space-between;gap:4px;overflow-x:auto;white-space:nowrap;margin-top:10px;padding-bottom:2px}.listenOptions .secondary{padding:8px 7px;font-size:10px;border-radius:11px}.toggleBtn.active{background:var(--blueSoft);border-color:#c8d8ff;color:var(--blue)}.abStatus{font-size:11px;color:var(--muted);margin-top:9px}.bubble{max-width:88%;border-radius:20px;padding:14px 15px;margin:10px 0;border:1px solid transparent;cursor:pointer;transition:.18s ease}.bubble.playing{outline:3px solid rgba(43,101,246,.28);transform:scale(1.015);box-shadow:0 8px 24px rgba(43,101,246,.14)}.bubble.translationHidden .ko{display:none}.bubble.left{margin-right:auto}.bubble.right{margin-left:auto}.bubble.blue{background:var(--blueSoft);border-color:#dbe7ff}.bubble.orange{background:var(--orangeSoft);border-color:#ffe2c2}.bubble.purple{background:var(--purpleSoft);border-color:#e8ddff}.bubble.green{background:var(--greenSoft);border-color:#d2f0e3}.speaker{font-size:11px;font-weight:900;letter-spacing:.7px;margin-bottom:6px}.blue .speaker{color:var(--blue)}.orange .speaker{color:var(--orange)}.purple .speaker{color:var(--purple)}.green .speaker{color:var(--green)}.en{font-size:16px;font-weight:800;line-height:1.45}.ko{font-size:13px;color:#59667e;margin-top:5px;line-height:1.5}.bubbleFoot{display:flex;justify-content:space-between;align-items:center;margin-top:9px}.mini{border:0;background:rgba(255,255,255,.72);border-radius:10px;padding:6px 9px;cursor:pointer}.star{font-size:18px}
+.audioDock{position:sticky;bottom:76px;z-index:10;background:#fff;border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:0 12px 30px rgba(25,48,79,.14);margin-top:16px}.audioBtns{display:flex;justify-content:center;align-items:center;gap:15px;margin-top:8px}.round{border:0;width:44px;height:44px;border-radius:50%;background:#edf2fa;cursor:pointer}.round.play{width:54px;height:54px;background:var(--blue);color:white;font-size:19px}.range{width:100%}.time{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.roleChoice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.role{border:2px solid var(--line);border-radius:18px;background:#fff;padding:17px;text-align:center;cursor:pointer}.role.active{border-color:var(--blue);background:var(--blueSoft)}.masked{background:#172033!important;color:white!important;border-color:#172033!important}.masked .ko{color:#bac4d7}.turn{font-weight:900;color:#ffe277}
+.shadowBox{text-align:center}.bigSentence{font-size:21px;font-weight:900;line-height:1.45;margin:18px 0}.recordBtn{width:78px;height:78px;border-radius:50%;border:8px solid #feecec;background:var(--danger);color:#fff;font-size:28px;cursor:pointer}.recordBtn.recording{animation:pulse 1s infinite}@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(226,77,77,.16)}}
+.wordGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.word{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer}.word b{font-size:17px}.word span{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.quizOpt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;margin:8px 0;cursor:pointer}.quizOpt.selected{border-color:var(--blue);background:var(--blueSoft)}.quizOpt.correct{border-color:var(--green);background:var(--greenSoft)}.quizOpt.wrong{border-color:var(--danger);background:#fff0f0}.result{font-weight:850;margin-top:10px}
+.mp3Box{border:1px dashed #b9c5d9;border-radius:18px;padding:16px;text-align:center;background:#fbfcff}.mp3Box input{max-width:100%} audio{width:100%;margin-top:10px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,430px);height:72px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:30}.navBtn{border:0;background:none;color:#8a95a9;font-size:11px;font-weight:800;cursor:pointer}.navBtn i{display:block;font-style:normal;font-size:21px;margin-bottom:2px}.navBtn.active{color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:#172033;color:white;padding:11px 15px;border-radius:12px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal{position:fixed;inset:0;background:rgba(14,24,39,.55);z-index:100;display:grid;place-items:center;padding:20px}.modalBox{width:min(100%,390px);background:#fff;border-radius:24px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}.modalBox h3{margin:0 0 10px}.modalBox li{margin:8px 0;color:#56637a;font-size:14px;line-height:1.5}
+.voiceStatus{display:flex;align-items:center;justify-content:center;gap:7px;margin:9px 0 2px;font-size:11px;color:var(--muted)}.voiceDot{width:7px;height:7px;border-radius:50%;background:var(--green)}.voicePanel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:14px;background:#fbfcff}.voiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.voiceSelect{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;background:white;padding:9px;font-size:12px}.voiceTestRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.voiceTestRow .secondary{flex:1;min-width:110px}.voiceDiag{font-size:11px;color:var(--muted);line-height:1.45;margin-top:7px}.naturalNote{font-size:11px;color:#40506a;line-height:1.5;margin-top:7px;padding:8px 9px;border-radius:10px;background:#f3f6fb}
+.small{font-size:12px;color:var(--muted)}
+@media(min-width:700px){body{padding:24px 0}#phone{min-height:calc(100vh - 48px);border-radius:32px;overflow:hidden}.bottom{bottom:24px;border-radius:0 0 32px 32px}}
+</style>
+</head>
+<body>
+<script id="android-tts-bridge">
+(function(){
+  if (typeof window.AndroidTTS === 'undefined') return;
+  let seq=0; const pending=new Map();
+  class NativeUtterance {
+    constructor(text=''){ this.text=String(text); this.lang='en-GB'; this.rate=1; this.pitch=1; this.volume=1; this.voice=null; this.onend=null; this.onerror=null; }
+  }
+  const voices=[
+    {name:'British Female · Android',lang:'en-GB',voiceURI:'native-female',localService:true},
+    {name:'British Male · Android',lang:'en-GB',voiceURI:'native-male',localService:true}
+  ];
+  function finishAll(asError){
+    for(const [id,u] of pending){
+      try{ (asError?u.onerror:u.onend)?.({utteranceId:id}); }catch(e){}
+    }
+    pending.clear();
+  }
+  window.__nativeTtsDone=function(id,ok){
+    const u=pending.get(String(id)); if(!u)return;
+    pending.delete(String(id));
+    setTimeout(()=>{ try{ (ok===false?u.onerror:u.onend)?.({utteranceId:id}); }catch(e){} },0);
+  };
+  window.SpeechSynthesisUtterance=NativeUtterance;
+  window.speechSynthesis={
+    speak(u){
+      const id='native-'+(++seq); pending.set(id,u);
+      try{
+        AndroidTTS.speak(String(u.text||''),u.voice&&u.voice.voiceURI?u.voice.voiceURI:'',String(u.lang||'en-GB'),Number(u.rate||1),Number(u.pitch||1),id);
+      }catch(e){ pending.delete(id); setTimeout(()=>u.onerror?.(e),0); }
+    },
+    cancel(){ try{AndroidTTS.cancel();}catch(e){} finishAll(true); },
+    pause(){ try{AndroidTTS.pause();}catch(e){} },
+    resume(){ try{AndroidTTS.resume();}catch(e){} },
+    getVoices(){ return voices.slice(); },
+    addEventListener(type,cb){ if(type==='voiceschanged'&&typeof cb==='function') setTimeout(cb,0); },
+    removeEventListener(){},
+    onvoiceschanged:null
+  };
+  setTimeout(()=>{ try{ if(typeof speechSynthesis.onvoiceschanged==='function') speechSynthesis.onvoiceschanged(); }catch(e){} },0);
+})();
+</script>
+<div id="phone">
+<header><div class="brand"><h1>CES English Coach</h1><button class="iconBtn" onclick="showGuide()">?</button></div></header>
+<main>
+<section id="home" class="view">
+  <div class="card" style="background:linear-gradient(135deg,#173b73,#2b65f6);color:white;border:0">
+    <div class="eyebrow" style="color:#bcd0ff">TODAY'S LESSON</div><div class="title">1장 How are you?</div><div class="sub" style="color:#dae5ff">인사 · 소개 · 출신 · 직업 표현을 대화로 연습합니다.</div>
+    <div style="margin:17px 0 9px" class="progress"><i id="homeProgress" style="width:20%"></i></div>
+    <button class="primary" style="background:white;color:#234fa7" onclick="openLesson(1)">▶ 이어서 학습</button>
+  </div>
+  <div class="stats"><div class="stat"><b id="statMin">0분</b><span>학습시간</span></div><div class="stat"><b id="statSaved">0</b><span>저장문장</span></div><div class="stat"><b id="statDone">0</b><span>완료 레슨</span></div></div>
+  <div class="sectionHead"><h2>빠른 테스트</h2></div>
+  <div class="card"><div class="module" onclick="openModule('dialogue')"><div class="moduleIcon">💬</div><div><b>실제 대화문 테스트</b><span>문장 터치 → 영어 음성 듣기</span></div></div><div class="module" onclick="openModule('role')"><div class="moduleIcon">🎭</div><div><b>역할극 테스트</b><span>Nancy / Peter 역할 선택</span></div></div><div class="module" onclick="openModule('shadow')"><div class="moduleIcon">🎙️</div><div><b>쉐도잉 테스트</b><span>듣고 녹음해서 비교</span></div></div><div class="module" onclick="openModule('quiz')"><div class="moduleIcon">✅</div><div><b>문제풀이 테스트</b><span>교재 1장 문제 기반</span></div></div></div>
+  <div class="sectionHead"><h2>MP3 연결 테스트</h2></div><div class="mp3Box"><b>내 MP3를 선택해 재생해보세요</b><p class="small">테스트판은 파일을 업로드하지 않고 휴대폰/PC에서 바로 재생합니다.</p><input id="mp3Input" type="file" accept="audio/*"><audio id="userAudio" controls></audio></div>
+</section>
+
+<section id="lessons" class="view hidden"><input id="lessonSearch" class="search" placeholder="레슨 검색 (예: airport, reservation)" oninput="renderLessons()"><div id="lessonList"></div></section>
+
+<section id="lesson" class="view hidden"><button class="back" onclick="go('lessons')">← 전체 레슨</button><div class="card"><div class="eyebrow" id="lessonLabel">LESSON 01</div><div class="title" id="lessonTitle">How are you?</div><div class="sub" id="lessonDesc">교재의 Dialogue, 발음클리닉, Listening, Exercise를 한 흐름으로 학습합니다.</div></div><div id="lessonModules" class="card"></div></section>
+
+<section id="dialogue" class="view hidden"><button class="back" onclick="openLesson(1)">← 1장</button><div class="eyebrow" id="dialogueEyebrow">DIALOGUE 1</div><div class="title" id="dialogueTitle">How are you?</div>
+<div class="dialogueSelector"><button id="tab-dialogue1" onclick="selectDialogue('dialogue1')">Dialogue 1</button><button id="tab-dialogue2" onclick="selectDialogue('dialogue2')">Dialogue 2</button><button id="tab-conversation" onclick="selectDialogue('conversation')">Conversation</button></div>
+<div class="listenPanel">
+  <div class="listenMain">
+    <button class="secondary seekBtn" onclick="seekFull(-10)">↶ 10초</button>
+    <button id="playAllBtn" class="secondary transportBtn" onclick="playAll()" aria-label="전체 듣기" title="전체 듣기">▶</button>
+    <button id="pauseAllBtn" class="secondary transportBtn" onclick="pauseAll()" aria-label="일시정지" title="일시정지">⏸</button>
+    <button class="secondary transportBtn" onclick="stopAll()" aria-label="정지" title="정지">⏹</button>
+    <button class="secondary seekBtn" onclick="seekFull(10)">10초 ↷</button>
+  </div>
+  <input id="fullProgress" class="fullProgress" type="range" min="0" max="100" value="0" step="1" oninput="seekFullToPercent(this.value)" aria-label="전체 듣기 진행 위치">
+  <div class="progressMeta"><span id="fullTime">00:00</span><span id="currentLineLabel">대기 중</span><span id="fullDuration">00:00</span></div>
+  <div class="voiceStatus"><span class="voiceDot"></span><span id="voiceStatus">🇬🇧 영국식 대화 음성 · 남/여 자동</span></div>
+  <div class="voicePanel">
+    <div class="voiceGrid">
+      <label class="small">여성 음성<select id="femaleVoiceSelect" class="voiceSelect" aria-label="여성 영국식 음성"></select></label>
+      <label class="small">남성 음성<select id="maleVoiceSelect" class="voiceSelect" aria-label="남성 영국식 음성"></select></label>
+    </div>
+    <div class="voiceTestRow">
+      <button class="secondary" type="button" onclick="testVoice('female')">♀ 여성 테스트</button>
+      <button class="secondary" type="button" onclick="testVoice('male')">♂ 남성 테스트</button>
+      <button class="secondary" type="button" onclick="swapVoices()">↔ 교체</button>
+    </div>
+    <div id="voiceDiag" class="voiceDiag">음성 목록을 불러오는 중…</div>
+  </div>
+  <div class="dialogueToolbar" style="padding-top:11px;padding-bottom:0"><button class="secondary" onclick="setSpeed(.8)">0.8x</button><button class="secondary" onclick="setSpeed(1)">1.0x</button><button class="secondary" onclick="setSpeed(1.2)">1.2x</button></div>
+  <div class="listenOptions">
+    <button id="repeatBtn" class="secondary toggleBtn" onclick="cycleRepeatCount()">🔁 1회</button>
+    <button id="autoScrollBtn" class="secondary toggleBtn" onclick="toggleAutoScroll()">⇣ 스크롤 OFF</button>
+    <button id="translationBtn" class="secondary toggleBtn" onclick="toggleTranslation()">한글 OFF</button>
+    <button class="secondary" onclick="setAB('A')">A</button><button class="secondary" onclick="setAB('B')">B</button><button class="secondary" onclick="clearAB()">AB</button>
+  </div>
+  <div id="abStatus" class="abStatus">A–B 구간: 설정 안 됨 · 현재 문장에서 A/B를 지정할 수 있습니다.</div>
+</div>
+<div id="dialogueLines"></div></section>
+
+<section id="role" class="view hidden"><button class="back" onclick="openLesson(1)">← 1장</button><div class="eyebrow">ROLE PLAY</div><div class="title" id="roleTitle">내 역할을 골라보세요</div><div id="roleChoice" class="roleChoice"></div><div id="roleLines" style="margin-top:16px"></div></section>
+
+<section id="shadow" class="view hidden"><button class="back" onclick="openLesson(1)">← 1장</button><div class="card shadowBox"><div class="eyebrow">SHADOWING</div><div class="small" id="shadowCount">문장 1 / 8</div><div id="shadowSentence" class="bigSentence"></div><button class="secondary" onclick="speakShadow()">🔊 원어민 듣기</button><div style="height:16px"></div><button id="recordBtn" class="recordBtn" onclick="toggleRecord()">●</button><div id="recordHint" class="small" style="margin-top:8px">눌러서 녹음</div><audio id="recordedAudio" controls class="hidden"></audio><div style="display:flex;gap:8px;margin-top:18px"><button class="secondary" style="flex:1" onclick="shadowPrev()">← 이전</button><button class="primary" style="flex:1" onclick="shadowNext()">다음 →</button></div></div></section>
+
+<section id="pronunciation" class="view hidden"><button class="back" onclick="openLesson(1)">← 1장</button><div class="eyebrow">PRONUNCIATION CLINIC</div><div class="title">단어 끝 자음 연습</div><div class="sub">단어 카드를 눌러 영어 발음을 들어보세요.</div><div id="wordGrid" class="wordGrid" style="margin-top:14px"></div></section>
+
+<section id="quiz" class="view hidden"><button class="back" onclick="openLesson(1)">← 1장</button><div class="eyebrow">EXERCISE</div><div class="title">1장 문제풀이</div><div class="card"><div class="small" id="quizNo"></div><h3 id="quizQ" style="line-height:1.5"></h3><div id="quizOpts"></div><button class="primary" onclick="checkQuiz()">정답 확인</button><div id="quizResult" class="result"></div></div><button class="secondary" style="width:100%" onclick="nextQuiz()">다음 문제 →</button></section>
+
+<section id="review" class="view hidden"><div class="title">복습</div><div class="sub">Dialogue에서 ⭐로 저장한 문장이 자동으로 모입니다.</div><div id="reviewList" style="margin-top:14px"></div></section>
+<section id="records" class="view hidden"><div class="title">학습 기록</div><div class="card"><div class="stats"><div class="stat"><b id="recMin">0</b><span>분</span></div><div class="stat"><b id="recSaved">0</b><span>저장문장</span></div><div class="stat"><b id="recDone">0</b><span>완료레슨</span></div></div><div class="sectionHead"><h2>테스트 데이터</h2></div><p class="sub">이 프로토타입의 기록은 브라우저에 저장됩니다. 초기화하면 처음 상태로 돌아갑니다.</p><button class="secondary" style="width:100%" onclick="resetData()">기록 초기화</button></div></section>
+</main>
+<div class="bottom"><button class="navBtn active" data-view="home" onclick="go('home')"><i>⌂</i>홈</button><button class="navBtn" data-view="lessons" onclick="go('lessons')"><i>▤</i>레슨</button><button class="navBtn" data-view="review" onclick="go('review')"><i>↻</i>복습</button><button class="navBtn" data-view="records" onclick="go('records')"><i>▥</i>기록</button></div>
+<div id="toast" class="toast"></div>
+<div id="guide" class="modal hidden"><div class="modalBox"><h3>테스트 방법</h3><ol><li><b>레슨</b>에서 1~40장 목록과 화면 이동을 확인하세요.</li><li>1장에서는 <b>Dialogue 1 / Dialogue 2 / Conversation / 역할극 / 쉐도잉 / 발음 / 문제풀이</b>가 실제로 동작합니다.</li><li>Dialogue에서는 <b>±10초 이동, 진행바, 현재 문장 강조, 자동스크롤, 한글 해석 숨김, 1·3·5회 반복, A–B 구간반복</b>을 시험할 수 있습니다.</li><li>대화 음성은 <b>영국식(en-GB)</b>을 우선 사용합니다. 화면에 실제 선택된 여성/남성 음성 이름이 표시되며, 각각 테스트하거나 서로 교체할 수 있습니다.</li><li>쉐도잉 녹음은 브라우저에서 마이크 권한을 허용해야 합니다.</li><li>MP3 연결 테스트에서 휴대폰/PC의 음원 파일을 직접 선택할 수 있습니다.</li></ol><button class="primary" onclick="hideGuide()">테스트 시작</button></div></div>
+</div>
+<script>
+const lessons=[
+[1,'How are you?'],[2,'What time is it?'],[3,"What's this?"],[4,'Which Season do you like best?'],[5,'Make yourself at home.'],[6,'Making a phone call.'],[7,'How much is it?'],[8,"What's the problem?"],[9,'What would you like to order?'],[10,'On the plane'],[11,'By air or by sea'],[12,'How do I get there?'],[13,'How do you go to work?'],[14,"I'd like to make a reservation"],[15,'How about ∼?'],[16,'May I ask you a favor?'],[17,'May I borrow this book?'],[18,'Have you ever been to∼?'],[19,'How was the weather yesterday?'],[20,"I'd like/hate∼"],[21,'Long time no see.'],[22,'Interview.'],[23,'At the airport.'],[24,'What do you ∼ ?'],[25,'Invited to dinner.'],[26,"Taking one's leave."],[27,'Making an appointment.'],[28,'At the restaurant.'],[29,'Making a phone call.'],[30,'Shopping.'],[31,'Asking for directions.'],[32,'Reservations.'],[33,'Can you take us to the Fifth Avenue?'],[34,'It looks good on you.'],[35,'What are your symptoms?'],[36,'He looks young for his age.'],[37,'Asking a favor.'],[38,'Travelling.'],[39,"I'd like to open a checking account."],[40,'International Trading']];
+const dialogueSets={
+ dialogue1:{label:'DIALOGUE 1',title:'How are you?',lines:[
+  {sp:'Nancy',en:'Hi. How are you?',ko:'안녕, 어떻게 지내니?',c:'blue'},
+  {sp:'Peter',en:"I'm very well. How are you doing?",ko:'나는 아주 잘 지내. 너는 어떻게 지내니?',c:'orange'},
+  {sp:'Nancy',en:"I'm pretty good, too.",ko:'나도 잘 지냈어.',c:'blue'},
+  {sp:'Nancy',en:"It's a fine day, isn't it?",ko:'오늘 날씨 좋지. 그렇지 않니?',c:'blue'},
+  {sp:'Peter',en:'Yes it is. But I love rainy days.',ko:'응, 그래. 하지만 나는 비오는 날을 아주 좋아해.',c:'orange'},
+  {sp:'Nancy',en:'You do? I do, too.',ko:'너두? 나도 그래.',c:'blue'},
+  {sp:'Peter',en:'Anyway, I have to go now. See you.',ko:'아무튼 지금 가야만해. 나중에 보자.',c:'orange'},
+  {sp:'Nancy',en:'See you later.',ko:'나중에 보자.',c:'blue'}]},
+ dialogue2:{label:'DIALOGUE 2',title:'Meeting Alice',lines:[
+  {sp:'Peter',en:'Hi, Nancy. How are you?',ko:'안녕하세요, 낸시. 어떻게 지내세요?',c:'orange'},
+  {sp:'Nancy',en:'Fine, thanks. Peter, this is Alice.',ko:'잘 지내요. 피터, 이쪽은 엘리스예요.',c:'blue'},
+  {sp:'Peter',en:'Hello, Alice.',ko:'안녕하세요, 엘리스.',c:'orange'},
+  {sp:'Alice',en:'How do you do?',ko:'처음 뵙겠습니다.',c:'purple'},
+  {sp:'Peter',en:'How do you do?',ko:'처음 뵙겠습니다.',c:'orange'},
+  {sp:'Alice',en:'Nice to meet you.',ko:'만나서 반갑습니다.',c:'purple'},
+  {sp:'Peter',en:'Nice to meet you, too.',ko:'저 역시 만나서 반갑습니다.',c:'orange'},
+  {sp:'Peter',en:'Alice, where are you from?',ko:'엘리스, 어디 출신입니까?',c:'orange'},
+  {sp:'Alice',en:"I'm from Canada.",ko:'캐나다 출신입니다.',c:'purple'},
+  {sp:'Peter',en:'Are you here on vacation?',ko:'휴가차 여기 왔습니까?',c:'orange'},
+  {sp:'Alice',en:"No. I'm here on business.",ko:'아닙니다, 사업상 여기에 왔습니다.',c:'purple'},
+  {sp:'Peter',en:'What do you do?',ko:'직업이 무엇입니까?',c:'orange'},
+  {sp:'Alice',en:"I'm a computer programmer.",ko:'컴퓨터 프로그래머입니다.',c:'purple'},
+  {sp:'Alice',en:'Peter, what do you do?',ko:'피터, 당신 직업은 무엇입니까?',c:'purple'},
+  {sp:'Peter',en:"I'm an engineer.",ko:'저는 엔지니어입니다.',c:'orange'}]},
+ conversation:{label:'CONVERSATION',title:'Where are you from?',lines:[
+  {sp:'Peter',en:'Hello, Miss Brown.',ko:'안녕하세요, 브라운 선생님.',c:'orange'},
+  {sp:'Miss Brown',en:'Hi, Peter.',ko:'안녕하세요, 피터.',c:'green'},
+  {sp:'Peter',en:'Where are you from?',ko:'어디 출신입니까?',c:'orange'},
+  {sp:'Miss Brown',en:"I'm from Canada. Where are you from?",ko:'저는 캐나다 출신입니다. 당신은 어디 출신입니까?',c:'green'},
+  {sp:'Peter',en:"I'm from Australia.",ko:'저는 호주 출신입니다.',c:'orange'}]}
+};
+let activeDialogueKey='dialogue1';
+let lines=dialogueSets[activeDialogueKey].lines;
+const words=[['talk',"'톡'에 가깝게"],['Robert',"'롸벝'에 가깝게"],['meet',"'미잍'에 가깝게"],['eight',"'에잍'에 가깝게"],['late',"'을레잍'에 가깝게"],['work',"'웤'에 가깝게"],['second',"'쎄컨'에 가깝게"],["can't","'캐앤'에 가깝게"],['night',"'나잍'에 가깝게"],['accident',"'액씨던'에 가깝게"]];
+const quizzes=[
+{q:'다음 영어 단어들 중에서 철자(spelling)가 틀린 것은?',o:['Canada','programmer','engineer','bussiness'],a:3},
+{q:'빈칸에 공통으로 들어갈 알맞은 것은?\nAre you here (   ) vacation? / No, I\'m (   ) business.',o:['to','for','on','from'],a:2},
+{q:'다음 중 문법적으로 틀린 문장을 고르시오.',o:['How are you?','This is Peter.','What are you do?','Are you here on business?'],a:2},
+{q:'A: What do you do? / B: (   )\n빈칸에 들어갈 수 없는 것은?',o:["I'm a student.","I'm working for a trading company.","I'm an engineer.","I'm doing my homework."],a:3},
+{q:'be 동사의 사용이 잘못된 것은?',o:['This is a cup.',"They're students.","His name's Tom.","Their name's Jane and Bill."],a:3}
+];
+let state=JSON.parse(localStorage.getItem('cesProto')||'{}'); if(!state.saved)state.saved=[]; state.saved=state.saved.map(x=>typeof x==='number'?'dialogue1:'+x:x); if(!state.done)state.done=[]; if(!state.minutes)state.minutes=0; let speechRate=1,currentRole='Peter',shadowIdx=0,qIdx=0,qSelected=null,mediaRecorder=null,chunks=[]; let playAllRunning=false,playAllStopped=false,speechPaused=false,currentLineIndex=0,currentLineStartedAt=0,currentLineElapsedBeforePause=0,repeatCount=1,repeatPass=0,autoScroll=false,showTranslation=false,abStart=null,abEnd=null,progressTimer=null,restartToken=0; let availableVoices=[];
+function save(){localStorage.setItem('cesProto',JSON.stringify(state));updateStats()}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1700)}
+function go(id){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.navBtn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='lessons')renderLessons();if(id==='review')renderReview();if(id==='records')updateStats();window.scrollTo(0,0)}
+function renderLessons(){const q=(document.getElementById('lessonSearch').value||'').toLowerCase();const box=document.getElementById('lessonList');box.innerHTML='';lessons.filter(x=>(x[0]+' '+x[1]).toLowerCase().includes(q)).forEach(([n,t])=>{const done=state.done.includes(n);const d=document.createElement('div');d.className='lessonRow';d.onclick=()=>openLesson(n);d.innerHTML=`<div class="lessonNum">${String(n).padStart(2,'0')}</div><div class="lessonMeta"><b>${t}</b><span>${n===1?'Dialogue · Pronunciation · Exercise':'교재 기반 레슨'} ${done?'· ✓ 완료':''}</span></div><div class="chev">›</div>`;box.appendChild(d)})}
+function openLesson(n){go('lesson');const t=lessons.find(x=>x[0]===n)[1];document.getElementById('lessonLabel').textContent='LESSON '+String(n).padStart(2,'0');document.getElementById('lessonTitle').textContent=t;document.getElementById('lessonDesc').textContent=n===1?'교재 원문 기준으로 Dialogue 1, Dialogue 2, Conversation, 발음클리닉, Exercise를 학습합니다.':'이 테스트판에서는 제목과 학습 흐름을 확인할 수 있습니다. 실제 앱 제작 시 이 장의 교재 내용과 MP3를 연결합니다.';const m=document.getElementById('lessonModules');if(n===1)m.innerHTML=`<div class="module" onclick="openDialogue('dialogue1')"><div class="moduleIcon">💬</div><div><b>Dialogue 1</b><span>Nancy ↔ Peter · 8문장</span></div></div><div class="module" onclick="openDialogue('dialogue2')"><div class="moduleIcon">💬</div><div><b>Dialogue 2</b><span>Peter · Nancy · Alice · 15문장</span></div></div><div class="module" onclick="openDialogue('conversation')"><div class="moduleIcon">🗣️</div><div><b>Conversation</b><span>Peter ↔ Miss Brown · 5문장</span></div></div><div class="module" onclick="openModule('role')"><div class="moduleIcon">🎭</div><div><b>Role Play</b><span>현재 선택한 대화의 역할 연습</span></div></div><div class="module" onclick="openModule('shadow')"><div class="moduleIcon">🎙️</div><div><b>Shadowing</b><span>현재 선택한 대화를 따라 말하기</span></div></div><div class="module" onclick="openModule('pronunciation')"><div class="moduleIcon">🔤</div><div><b>Pronunciation Clinic</b><span>단어 끝 자음 읽기</span></div></div><div class="module" onclick="openModule('quiz')"><div class="moduleIcon">✅</div><div><b>Exercise</b><span>교재 문제 풀기</span></div></div><div class="module" onclick="completeLesson(1)"><div class="moduleIcon">🏁</div><div><b>1장 학습 완료</b><span>학습기록에 완료 표시</span></div></div>`;else m.innerHTML=`<div style="text-align:center;padding:18px 8px"><div style="font-size:36px">🧪</div><h3>${n}장 화면 흐름 테스트</h3><p class="sub">현재 프로토타입은 1장을 완전 동작 예시로 구현했습니다. 최종 앱에서는 ${n}장도 교재 원문에 존재하는 Dialogue 개수대로 연결합니다.</p><button class="primary" onclick="completeLesson(${n})">이 레슨 완료 표시 테스트</button></div>`}
+function openDialogue(key){selectDialogue(key,false);go('dialogue');renderDialogue()}
+function selectDialogue(key,rerender=true){if(!dialogueSets[key])return;stopAll(false);activeDialogueKey=key;lines=dialogueSets[key].lines;currentLineIndex=0;currentLineElapsedBeforePause=0;shadowIdx=0;abStart=null;abEnd=null;const speakers=[...new Set(lines.map(x=>x.sp))];currentRole=speakers[0]||'';const set=dialogueSets[key];const e=document.getElementById('dialogueEyebrow');if(e)e.textContent=set.label;const t=document.getElementById('dialogueTitle');if(t)t.textContent=set.title;document.querySelectorAll('.dialogueSelector button').forEach(b=>b.classList.toggle('active',b.id==='tab-'+key));if(rerender){renderDialogue();updateFullDuration();updateABStatus()} }
+
+function openModule(id){go(id);if(id==='dialogue')renderDialogue();if(id==='role'){renderRoleChoices();chooseRole(currentRole)}if(id==='shadow'){shadowIdx=0;renderShadow()}if(id==='pronunciation')renderWords();if(id==='quiz')renderQuiz();}
+const FEMALE_SPEAKERS=new Set(['nancy','alice','miss brown','mrs. kim','mrs kim','stewardess','woman','mary','jane','helen','a']);
+const MALE_SPEAKERS=new Set(['peter','mr. kim','mr kim','mike','david','officer','man','george','robert','b']);
+const FEMALE_VOICE_HINTS=['female','sonia','libby','hazel','susan','serena','martha','kate','moira','fiona','victoria','samantha','karen','aria','salli','amy','google uk english female'];
+const MALE_VOICE_HINTS=['male','ryan','george','daniel','arthur','oliver','thomas','james','fred','alex','brian','guy','david','google uk english male'];
+const NATURAL_VOICE_HINTS=['natural','neural','premium','enhanced','online','wavenet'];
+const ROBOTIC_VOICE_HINTS=['espeak','compact','basic'];
+let selectedVoiceURI={female:'',male:''};
+function normaliseSpeaker(sp){return String(sp||'').trim().toLowerCase().replace(/\s+/g,' ')}
+function genderForSpeaker(sp){const n=normaliseSpeaker(sp);if(FEMALE_SPEAKERS.has(n)||n.startsWith('mrs ')||n.startsWith('miss ')||n.startsWith('ms '))return 'female';if(MALE_SPEAKERS.has(n)||n.startsWith('mr '))return 'male';return 'neutral'}
+function isBritish(v){const l=(v.lang||'').toLowerCase().replace('_','-');return l==='en-gb'||l.startsWith('en-gb')}
+function voiceHintScore(v,gender){const name=(v.name||'').toLowerCase();const hints=gender==='female'?FEMALE_VOICE_HINTS:MALE_VOICE_HINTS;const opposite=gender==='female'?MALE_VOICE_HINTS:FEMALE_VOICE_HINTS;let s=isBritish(v)?140:(String(v.lang||'').toLowerCase().startsWith('en')?35:0);if(hints.some(h=>name.includes(h)))s+=90;if(opposite.some(h=>name.includes(h)))s-=80;if(NATURAL_VOICE_HINTS.some(h=>name.includes(h)))s+=75;if(ROBOTIC_VOICE_HINTS.some(h=>name.includes(h)))s-=90;if(v.localService)s+=5;return s}
+function voiceKey(v){return (v.voiceURI||v.name||'')+'|'+(v.lang||'')}
+function findVoiceByURI(uri){return availableVoices.find(v=>voiceKey(v)===uri)||null}
+function autoPickVoices(){const english=availableVoices.filter(v=>String(v.lang||'').toLowerCase().startsWith('en'));const pool=(english.filter(isBritish).length?english.filter(isBritish):english).slice();if(!pool.length){selectedVoiceURI={female:'',male:''};return}
+  const female=[...pool].sort((a,b)=>voiceHintScore(b,'female')-voiceHintScore(a,'female'))[0]||pool[0];
+  let male=[...pool].filter(v=>voiceKey(v)!==voiceKey(female)).sort((a,b)=>voiceHintScore(b,'male')-voiceHintScore(a,'male'))[0];
+  if(!male)male=female;
+  selectedVoiceURI.female=voiceKey(female);selectedVoiceURI.male=voiceKey(male);
+}
+function populateVoiceSelect(id,gender){const sel=document.getElementById(id);if(!sel)return;const english=availableVoices.filter(v=>String(v.lang||'').toLowerCase().startsWith('en'));sel.innerHTML='';english.forEach(v=>{const o=document.createElement('option');o.value=voiceKey(v);o.textContent=`${isBritish(v)?'🇬🇧 ':'🌐 '}${v.name} (${v.lang})`;sel.appendChild(o)});sel.value=selectedVoiceURI[gender]||'';sel.onchange=()=>{selectedVoiceURI[gender]=sel.value;updateVoiceDiagnostics()}}
+function updateVoiceDiagnostics(){const f=findVoiceByURI(selectedVoiceURI.female),m=findVoiceByURI(selectedVoiceURI.male);const same=f&&m&&voiceKey(f)===voiceKey(m);const st=document.getElementById('voiceStatus');const d=document.getElementById('voiceDiag');if(st){if(f&&m&&!same)st.textContent='🇬🇧 자연대화 모드 · 남/여 음성 분리';else if(f&&m&&same)st.textContent='⚠ 이 기기는 영국식 음성을 1종만 제공';else st.textContent='⚠ 영어 TTS 음성 확인 필요'}if(d){const fn=f?`${f.name} (${f.lang})`:'없음',mn=m?`${m.name} (${m.lang})`:'없음';d.textContent=`여성: ${fn} · 남성: ${mn}${same?' · 같은 음성에서는 과도한 pitch 변조를 하지 않아 자연스러움을 우선합니다.':''}`}}
+function refreshVoices(){if(!('speechSynthesis' in window))return;availableVoices=speechSynthesis.getVoices()||[];const previous={...selectedVoiceURI};if(!findVoiceByURI(previous.female)||!findVoiceByURI(previous.male))autoPickVoices();populateVoiceSelect('femaleVoiceSelect','female');populateVoiceSelect('maleVoiceSelect','male');updateVoiceDiagnostics()}
+function chooseBritishVoice(sp){const gender=genderForSpeaker(sp);if(!availableVoices.length)refreshVoices();if(gender==='female')return findVoiceByURI(selectedVoiceURI.female);if(gender==='male')return findVoiceByURI(selectedVoiceURI.male);return findVoiceByURI(selectedVoiceURI.female)||findVoiceByURI(selectedVoiceURI.male)||availableVoices[0]||null}
+function prepareSpeechText(txt){let t=String(txt||'').trim().replace(/\s+/g,' ');t=t.replace(/^Oh\s+/i,'Oh, ').replace(/^Well\s+/i,'Well, ').replace(/^Anyway\s+/i,'Anyway, ').replace(/^Sure\s+/i,'Sure, ');t=t.replace(/^Yes it is\./i,'Yes, it is.');return t}
+function speakerRateFactor(sp){const n=normaliseSpeaker(sp);if(n==='nancy')return 1.00;if(n==='alice')return .98;if(n==='miss brown')return .97;if(n==='peter')return .98;if(n.startsWith('mr '))return .96;if(n.startsWith('mrs '))return .97;return .98}
+function buildUtterance(txt,sp){const u=new SpeechSynthesisUtterance(prepareSpeechText(txt));const gender=genderForSpeaker(sp);const v=chooseBritishVoice(sp);if(v){u.voice=v;u.lang=v.lang||'en-GB'}else u.lang='en-GB';const f=findVoiceByURI(selectedVoiceURI.female),m=findVoiceByURI(selectedVoiceURI.male),same=f&&m&&voiceKey(f)===voiceKey(m);u.pitch=same?(gender==='female'?1.04:gender==='male'?.96:1):1;u.rate=Math.max(.72,Math.min(1.22,speechRate*speakerRateFactor(sp)));u.volume=1;return u}
+function speak(txt,sp='Tutor'){if(!('speechSynthesis'in window)){toast('이 브라우저는 음성합성을 지원하지 않습니다.');return}speechSynthesis.cancel();const u=buildUtterance(txt,sp);speechSynthesis.speak(u);state.minutes=Math.max(state.minutes,1);save()}
+function testVoice(gender){const sp=gender==='female'?'Nancy':'Peter';const text=gender==='female'?"Hi, Peter. How are you? It's lovely to see you.":"Hi, Nancy. I'm very well, thanks. How are you doing?";speak(text,sp)}
+function swapVoices(){const t=selectedVoiceURI.female;selectedVoiceURI.female=selectedVoiceURI.male;selectedVoiceURI.male=t;populateVoiceSelect('femaleVoiceSelect','female');populateVoiceSelect('maleVoiceSelect','male');updateVoiceDiagnostics();toast('남성/여성 음성을 서로 바꿨습니다.')}
+function conversationGap(txt='',sp='',nextSp=''){let ms=170;if(nextSp&&normaliseSpeaker(sp)===normaliseSpeaker(nextSp))ms=75;else if(/[?]\s*$/.test(String(txt)))ms=215;else if(/[!]\s*$/.test(String(txt)))ms=195;return new Promise(r=>setTimeout(r,Math.max(60,Math.round(ms/Math.max(.8,speechRate)))))}
+function setSpeed(r){speechRate=r;updateFullDuration();toast('음성 속도 '+r+'x')}
+function estimateLineSeconds(x){const words=(x.en.match(/[A-Za-z']+/g)||[]).length;return Math.max(2.0,(words/2.45)+0.55)/(speechRate*.98)}
+function timeline(){let t=0;return lines.map((x,i)=>{const start=t,dur=estimateLineSeconds(x);t+=dur;return {i,start,end:t,dur}})}
+function totalSeconds(){const tl=timeline();return tl.length?tl[tl.length-1].end:0}
+function fmtTime(sec){sec=Math.max(0,Math.round(sec||0));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function currentVirtualTime(){const tl=timeline(),base=tl[currentLineIndex]?.start||0;if(!playAllRunning||speechPaused)return base+currentLineElapsedBeforePause;return Math.min((tl[currentLineIndex]?.end||base),base+currentLineElapsedBeforePause+(Date.now()-currentLineStartedAt)/1000)}
+function updateFullDuration(){const d=totalSeconds();const e=document.getElementById('fullDuration');if(e)e.textContent=fmtTime(d);updateProgressUI()}
+function updateProgressUI(){const t=Math.min(totalSeconds(),currentVirtualTime()),d=Math.max(.1,totalSeconds());const p=document.getElementById('fullProgress');if(p)p.value=Math.round(t/d*100);const tm=document.getElementById('fullTime');if(tm)tm.textContent=fmtTime(t);const lab=document.getElementById('currentLineLabel');if(lab)lab.textContent=playAllRunning?`문장 ${currentLineIndex+1}/${lines.length}`:'대기 중'}
+function startProgressTimer(){stopProgressTimer();progressTimer=setInterval(updateProgressUI,200)}
+function stopProgressTimer(){if(progressTimer){clearInterval(progressTimer);progressTimer=null}updateProgressUI()}
+function highlightLine(i){document.querySelectorAll('#dialogueLines .bubble').forEach((el,j)=>el.classList.toggle('playing',j===i));const el=document.querySelector(`#dialogueLines .bubble[data-index="${i}"]`);if(el&&autoScroll)el.scrollIntoView({behavior:'smooth',block:'center'})}
+function lineKey(i){return activeDialogueKey+':'+i}
+function renderDialogue(){const b=document.getElementById('dialogueLines');b.innerHTML='';const set=dialogueSets[activeDialogueKey];document.getElementById('dialogueEyebrow').textContent=set.label;document.getElementById('dialogueTitle').textContent=set.title;document.querySelectorAll('.dialogueSelector button').forEach(btn=>btn.classList.toggle('active',btn.id==='tab-'+activeDialogueKey));lines.forEach((x,i)=>{const d=document.createElement('div');d.dataset.index=i;d.className=`bubble ${i%2?'right':'left'} ${x.c}${showTranslation?'':' translationHidden'}${playAllRunning&&currentLineIndex===i?' playing':''}`;d.onclick=()=>{currentLineIndex=i;highlightLine(i);speak(x.en,x.sp)};d.innerHTML=`<div class="speaker">${genderForSpeaker(x.sp)==='female'?'♀':'♂'} ${x.sp.toUpperCase()}</div><div class="en">${x.en}</div><div class="ko">${x.ko}</div><div class="bubbleFoot"><button class="mini" onclick="event.stopPropagation();playSingleLine(${i})">🔊 듣기</button><button class="mini" onclick="event.stopPropagation();repeatSingleLine(${i})">🔁 3회</button><button class="mini" onclick="event.stopPropagation();currentLineIndex=${i};highlightLine(${i});setAB('A')">A</button><button class="mini" onclick="event.stopPropagation();currentLineIndex=${i};highlightLine(${i});setAB('B')">B</button><button class="mini star" onclick="event.stopPropagation();toggleSave(${i})">${state.saved.includes(lineKey(i))?'★':'☆'}</button></div>`;b.appendChild(d)});updateFullDuration();updateABStatus()}
+function playSingleLine(i){currentLineIndex=i;highlightLine(i);speak(lines[i].en,lines[i].sp)}
+async function repeatSingleLine(i){restartToken++;speechSynthesis.cancel();playAllRunning=false;playAllStopped=false;speechPaused=false;currentLineIndex=i;highlightLine(i);for(let n=0;n<3;n++){if(playAllStopped)break;await speakPromise(lines[i].en,lines[i].sp)}if(!playAllStopped)toast('문장을 3회 반복했습니다.')}
+function speakPromise(txt,sp='Tutor',nextSp=''){return new Promise(res=>{const u=buildUtterance(txt,sp);u.onend=async()=>{await conversationGap(txt,sp,nextSp);res()};u.onerror=res;speechSynthesis.speak(u)})}
+function currentRange(){let s=abStart===null?0:abStart,e=abEnd===null?lines.length-1:abEnd;if(e<s)[s,e]=[e,s];return [s,e]}
+async function playAll(){
+  if(!('speechSynthesis' in window)){toast('이 브라우저는 음성합성을 지원하지 않습니다.');return}
+  if(speechPaused){speechSynthesis.resume();speechPaused=false;currentLineStartedAt=Date.now();const p=document.getElementById('pauseAllBtn');if(p){p.textContent='⏸';p.setAttribute('aria-label','일시정지');p.title='일시정지'};startProgressTimer();toast('전체 듣기를 계속합니다.');return}
+  if(playAllRunning){toast('전체 듣기가 재생 중입니다.');return}
+  const token=++restartToken;playAllRunning=true;playAllStopped=false;repeatPass=0;const [rangeStart,rangeEnd]=currentRange();if(currentLineIndex<rangeStart||currentLineIndex>rangeEnd)currentLineIndex=rangeStart;
+  const playBtn=document.getElementById('playAllBtn');if(playBtn){playBtn.textContent='🔊';playBtn.setAttribute('aria-label','재생 중');playBtn.title='재생 중'};startProgressTimer();
+  for(let pass=0;pass<repeatCount;pass++){
+    repeatPass=pass;
+    for(let i=(pass===0?currentLineIndex:rangeStart);i<=rangeEnd;i++){
+      if(playAllStopped||token!==restartToken)break;
+      currentLineIndex=i;currentLineElapsedBeforePause=0;currentLineStartedAt=Date.now();highlightLine(i);updateProgressUI();
+      await speakPromise(lines[i].en,lines[i].sp,lines[i+1]?.sp||'');
+    }
+    if(playAllStopped||token!==restartToken)break;
+  }
+  if(token!==restartToken)return;
+  playAllRunning=false;speechPaused=false;currentLineElapsedBeforePause=0;currentLineIndex=rangeStart;stopProgressTimer();highlightLine(-1);
+  if(playBtn){playBtn.textContent='▶';playBtn.setAttribute('aria-label','전체 듣기');playBtn.title='전체 듣기'};const pauseBtn=document.getElementById('pauseAllBtn');if(pauseBtn){pauseBtn.textContent='⏸';pauseBtn.setAttribute('aria-label','일시정지');pauseBtn.title='일시정지'};
+}
+function pauseAll(){
+  if(!playAllRunning){toast('먼저 전체 듣기를 시작하세요.');return}
+  const b=document.getElementById('pauseAllBtn');
+  if(speechPaused){speechSynthesis.resume();speechPaused=false;currentLineStartedAt=Date.now();if(b){b.textContent='⏸';b.setAttribute('aria-label','일시정지');b.title='일시정지'};startProgressTimer();toast('계속 재생합니다.');}
+  else{currentLineElapsedBeforePause=currentVirtualTime()-(timeline()[currentLineIndex]?.start||0);speechSynthesis.pause();speechPaused=true;if(b){b.textContent='▶';b.setAttribute('aria-label','계속 듣기');b.title='계속 듣기'};stopProgressTimer();toast('일시정지했습니다.');}
+}
+function stopAll(showToast=true){
+  restartToken++;playAllStopped=true;playAllRunning=false;speechPaused=false;speechSynthesis.cancel();currentLineIndex=abStart===null?0:abStart;currentLineElapsedBeforePause=0;stopProgressTimer();highlightLine(-1);
+  const p=document.getElementById('playAllBtn');if(p){p.textContent='▶';p.setAttribute('aria-label','전체 듣기');p.title='전체 듣기'};const b=document.getElementById('pauseAllBtn');if(b){b.textContent='⏸';b.setAttribute('aria-label','일시정지');b.title='일시정지'};if(showToast)toast('재생을 정지했습니다.');
+}
+function jumpToVirtualTime(target,autoplay){const tl=timeline(),d=totalSeconds();target=Math.max(0,Math.min(d,target));let idx=tl.findIndex(z=>target<z.end);if(idx<0)idx=lines.length-1;const wasPlaying=playAllRunning&&!speechPaused;restartToken++;speechSynthesis.cancel();playAllRunning=false;speechPaused=false;currentLineIndex=idx;currentLineElapsedBeforePause=0;highlightLine(idx);updateProgressUI();if(autoplay||wasPlaying)setTimeout(playAll,60)}
+function seekFull(delta){jumpToVirtualTime(currentVirtualTime()+delta,false);toast((delta<0?'10초 전':'10초 후')+' 위치로 이동했습니다.')}
+function seekFullToPercent(v){jumpToVirtualTime(totalSeconds()*(Number(v)||0)/100,false)}
+function cycleRepeatCount(){repeatCount=repeatCount===1?3:repeatCount===3?5:1;const b=document.getElementById('repeatBtn');if(b)b.textContent=`🔁 ${repeatCount}회`;toast(`전체 듣기 ${repeatCount}회 반복`)}
+function toggleAutoScroll(){autoScroll=!autoScroll;const b=document.getElementById('autoScrollBtn');b.classList.toggle('active',autoScroll);b.textContent=autoScroll?'⇣ 스크롤 ON':'⇣ 스크롤 OFF'}
+function toggleTranslation(){showTranslation=!showTranslation;const b=document.getElementById('translationBtn');b.classList.toggle('active',showTranslation);b.textContent=showTranslation?'한글 ON':'한글 OFF';document.querySelectorAll('#dialogueLines .bubble').forEach(el=>el.classList.toggle('translationHidden',!showTranslation))}
+function setAB(which){if(which==='A'){abStart=currentLineIndex;if(abEnd!==null&&abEnd<abStart)abEnd=null;toast(`A 시작: ${abStart+1}번 문장`)}else{if(abStart===null){toast('먼저 A 시작을 지정하세요.');return}abEnd=currentLineIndex;if(abEnd<abStart)[abStart,abEnd]=[abEnd,abStart];toast(`B 끝: ${abEnd+1}번 문장`)}updateABStatus()}
+function clearAB(){abStart=null;abEnd=null;updateABStatus();toast('A–B 구간 반복을 해제했습니다.')}
+function updateABStatus(){const e=document.getElementById('abStatus');if(!e)return;e.textContent=abStart===null?'A–B 구간: 설정 안 됨 · 현재 문장에서 A/B를 지정할 수 있습니다.':abEnd===null?`A–B 구간: A=${abStart+1}번 · B 끝을 지정하세요.`:`A–B 구간: ${abStart+1}번 ~ ${abEnd+1}번 문장`}
+function toggleSave(i){const k=lineKey(i);state.saved=state.saved.includes(k)?state.saved.filter(x=>x!==k):[...state.saved,k];save();renderDialogue();toast(state.saved.includes(k)?'복습에 저장했습니다.':'저장을 해제했습니다.')}
+function speakerColor(sp){const found=lines.find(x=>x.sp===sp);return found?found.c:'blue'}
+function renderRoleChoices(){const box=document.getElementById('roleChoice');if(!box)return;const speakers=[...new Set(lines.map(x=>x.sp))];if(!speakers.includes(currentRole))currentRole=speakers[0]||'';box.innerHTML='';speakers.forEach(sp=>{const btn=document.createElement('button');btn.className='role'+(sp===currentRole?' active':'');btn.dataset.role=sp;btn.innerHTML=`<b>${sp.toUpperCase()}</b><br><span class="small">내가 ${sp}</span>`;btn.addEventListener('click',()=>chooseRole(sp));box.appendChild(btn)});const title=document.getElementById('roleTitle');if(title)title.textContent=dialogueSets[activeDialogueKey].label+' 역할 연습'}
+function chooseRole(r){currentRole=r;renderRoleChoices();const b=document.getElementById('roleLines');b.innerHTML='';lines.forEach((x,i)=>{const mine=x.sp===r;const d=document.createElement('div');d.className=`bubble ${i%2?'right':'left'} ${x.c} ${mine?'masked':''}`;if(mine){d.innerHTML=`<div class="speaker">${x.sp.toUpperCase()}</div><div class="turn">🎤 YOUR TURN</div><div class="en" style="margin-top:7px">문장을 직접 말해보세요.</div><button class="mini revealAnswer" style="margin-top:9px">정답 보기</button>`;const btn=d.querySelector('.revealAnswer');btn.addEventListener('click',ev=>{ev.stopPropagation();d.classList.remove('masked');d.querySelector('.en').textContent=x.en;btn.textContent='🔊';btn.onclick=()=>speak(x.en,x.sp)})}else{d.innerHTML=`<div class="speaker">${x.sp.toUpperCase()}</div><div class="en">${x.en}</div><div class="ko">${x.ko}</div><button class="mini otherListen" style="margin-top:9px">🔊</button>`;d.querySelector('.otherListen').addEventListener('click',ev=>{ev.stopPropagation();speak(x.en,x.sp)})}b.appendChild(d)})}
+
+function renderShadow(){document.getElementById('shadowCount').textContent=`문장 ${shadowIdx+1} / ${lines.length}`;document.getElementById('shadowSentence').textContent=lines[shadowIdx].en}
+function speakShadow(){speak(lines[shadowIdx].en,lines[shadowIdx].sp)}function shadowNext(){shadowIdx=(shadowIdx+1)%lines.length;renderShadow()}function shadowPrev(){shadowIdx=(shadowIdx-1+lines.length)%lines.length;renderShadow()}
+async function toggleRecord(){const btn=document.getElementById('recordBtn'),hint=document.getElementById('recordHint');if(mediaRecorder&&mediaRecorder.state==='recording'){mediaRecorder.stop();btn.classList.remove('recording');hint.textContent='녹음 완료';return}try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>chunks.push(e.data);mediaRecorder.onstop=()=>{const blob=new Blob(chunks,{type:'audio/webm'});const a=document.getElementById('recordedAudio');a.src=URL.createObjectURL(blob);a.classList.remove('hidden');stream.getTracks().forEach(t=>t.stop())};mediaRecorder.start();btn.classList.add('recording');hint.textContent='녹음 중… 다시 누르면 종료'}catch(e){toast('마이크 권한을 허용해주세요.') }}
+function renderWords(){const b=document.getElementById('wordGrid');b.innerHTML='';words.forEach(w=>{const d=document.createElement('div');d.className='word';d.onclick=()=>speak(w[0],'Tutor');d.innerHTML=`<b>${w[0]} 🔊</b><span>${w[1]}</span>`;b.appendChild(d)})}
+function renderQuiz(){qSelected=null;document.getElementById('quizResult').textContent='';const q=quizzes[qIdx];document.getElementById('quizNo').textContent=`문제 ${qIdx+1} / ${quizzes.length}`;document.getElementById('quizQ').innerHTML=q.q.replaceAll('\n','<br>');const b=document.getElementById('quizOpts');b.innerHTML='';q.o.forEach((x,i)=>{const btn=document.createElement('button');btn.className='quizOpt';btn.textContent=`${i+1}) ${x}`;btn.onclick=()=>{qSelected=i;document.querySelectorAll('.quizOpt').forEach((e,j)=>e.classList.toggle('selected',j===i))};b.appendChild(btn)})}
+function checkQuiz(){if(qSelected===null){toast('답을 먼저 선택하세요.');return}const q=quizzes[qIdx],opts=[...document.querySelectorAll('.quizOpt')];opts.forEach((e,i)=>{e.classList.remove('selected');if(i===q.a)e.classList.add('correct');else if(i===qSelected)e.classList.add('wrong')});document.getElementById('quizResult').textContent=qSelected===q.a?'✓ 정답입니다!':'✕ 정답은 '+(q.a+1)+'번입니다.'}
+function nextQuiz(){qIdx=(qIdx+1)%quizzes.length;renderQuiz()}
+function completeLesson(n){if(!state.done.includes(n))state.done.push(n);state.minutes+=5;save();toast(`${n}장 완료로 기록했습니다.`)}
+function renderReview(){const b=document.getElementById('reviewList');if(!state.saved.length){b.innerHTML='<div class="card" style="text-align:center"><div style="font-size:34px">☆</div><h3>저장한 문장이 없습니다</h3><p class="sub">Dialogue에서 별표를 눌러 문장을 저장해보세요.</p><button class="primary" onclick="openDialogue(\'dialogue1\')">Dialogue로 이동</button></div>';return}b.innerHTML='';state.saved.forEach(k=>{const [setKey,idxText]=String(k).split(':');const set=dialogueSets[setKey];const i=Number(idxText);if(!set||!set.lines[i])return;const x=set.lines[i];const d=document.createElement('div');d.className=`bubble ${x.c}`;d.onclick=()=>speak(x.en,x.sp);d.innerHTML=`<div class="speaker">${set.label} · ${x.sp.toUpperCase()}</div><div class="en">${x.en}</div><div class="ko">${x.ko}</div>`;b.appendChild(d)})}
+
+function updateStats(){const saved=state.saved.length,done=state.done.length,min=state.minutes;['statSaved','recSaved'].forEach(id=>document.getElementById(id).textContent=saved);['statDone','recDone'].forEach(id=>document.getElementById(id).textContent=done);document.getElementById('statMin').textContent=min+'분';document.getElementById('recMin').textContent=min;document.getElementById('homeProgress').style.width=Math.max(8,Math.min(100,done/40*100))+'%'}
+function resetData(){state={saved:[],done:[],minutes:0};save();renderReview();toast('테스트 기록을 초기화했습니다.')}
+function showGuide(){document.getElementById('guide').classList.remove('hidden')}function hideGuide(){document.getElementById('guide').classList.add('hidden')}
+document.getElementById('mp3Input').addEventListener('change',e=>{const f=e.target.files[0];if(f){document.getElementById('userAudio').src=URL.createObjectURL(f);toast('MP3를 연결했습니다.')}});
+if('speechSynthesis' in window){refreshVoices();speechSynthesis.addEventListener?.('voiceschanged',refreshVoices);speechSynthesis.onvoiceschanged=refreshVoices;}selectDialogue('dialogue1',false);renderLessons();renderDialogue();renderWords();renderShadow();renderQuiz();updateStats();updateFullDuration();setTimeout(showGuide,350);
+</script>
+</body></html>
