@@ -3,6 +3,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
+        android:icon="@drawable/pwk_launcher"
+        android:roundIcon="@drawable/pwk_launcher"
         android:label="ParkTube"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar"
