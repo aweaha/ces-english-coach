@@ -45,6 +45,24 @@ public class MainActivity extends Activity {
   boolean appFullscreen = false;
   int orientationMode = 0;
   long lastInject = 0L;
+  boolean carReceiverRegistered = false;
+  final BroadcastReceiver carReceiver = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      if (intent == null || web == null) return;
+      String action = intent.getAction();
+      if ("com.pwk.parktube.ACTION_PLAY".equals(action)) {
+        web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v)v.play();})()", null);
+      } else if ("com.pwk.parktube.ACTION_PAUSE".equals(action)) {
+        web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v)v.pause();})()", null);
+      } else if ("com.pwk.parktube.ACTION_TOGGLE".equals(action)) {
+        web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v){if(v.paused)v.play();else v.pause();}})()", null);
+      } else if ("com.pwk.parktube.ACTION_NEXT".equals(action)) {
+        web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v)v.currentTime=Math.min(v.duration||1e9,(v.currentTime||0)+10);})()", null);
+      } else if ("com.pwk.parktube.ACTION_PREV".equals(action)) {
+        web.evaluateJavascript("(function(){var v=document.querySelector('video');if(v)v.currentTime=Math.max(0,(v.currentTime||0)-10);})()", null);
+      }
+    }
+  };
   final Handler handler = new Handler(Looper.getMainLooper());
 
   final Runnable driveTicker = new Runnable() {
@@ -703,6 +721,29 @@ public class MainActivity extends Activity {
     if (driveMode) { setDriveMode(false); return; }
     if (customView != null) { hideCustomView(); return; }
     if (web.canGoBack()) web.goBack(); else super.onBackPressed();
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    if (!carReceiverRegistered) {
+      IntentFilter f = new IntentFilter();
+      f.addAction("com.pwk.parktube.ACTION_PLAY");
+      f.addAction("com.pwk.parktube.ACTION_PAUSE");
+      f.addAction("com.pwk.parktube.ACTION_TOGGLE");
+      f.addAction("com.pwk.parktube.ACTION_NEXT");
+      f.addAction("com.pwk.parktube.ACTION_PREV");
+      if (Build.VERSION.SDK_INT >= 33) registerReceiver(carReceiver, f, Context.RECEIVER_NOT_EXPORTED);
+      else registerReceiver(carReceiver, f);
+      carReceiverRegistered = true;
+    }
+  }
+
+  @Override protected void onStop() {
+    if (carReceiverRegistered) {
+      try { unregisterReceiver(carReceiver); } catch (Exception ignored) {}
+      carReceiverRegistered = false;
+    }
+    super.onStop();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
