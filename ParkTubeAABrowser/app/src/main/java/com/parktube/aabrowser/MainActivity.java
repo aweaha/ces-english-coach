@@ -65,6 +65,38 @@ public class MainActivity extends Activity {
   };
   final Handler handler = new Handler(Looper.getMainLooper());
 
+  void broadcastCarState(String title, boolean paused, double position, double duration) {
+    Intent i = new Intent("com.pwk.parktube.ACTION_SYNC");
+    i.setPackage(getPackageName());
+    i.putExtra("title", title == null || title.isEmpty() ? "ParkTube PWK" : title);
+    i.putExtra("paused", paused);
+    i.putExtra("position", Math.max(0L, (long)(position * 1000)));
+    i.putExtra("duration", Math.max(0L, (long)(duration * 1000)));
+    sendBroadcast(i);
+  }
+
+  final Runnable carStateTicker = new Runnable() {
+    @Override public void run() {
+      if (web != null) {
+        String js = "(function(){var v=document.querySelector('video');return v?{t:v.currentTime||0,d:isFinite(v.duration)?v.duration:0,p:!!v.paused,title:(document.title||'').replace(/ - YouTube$/,'')}:{};})()";
+        web.evaluateJavascript(js, value -> {
+          try {
+            if (value != null && value.startsWith("{")) {
+              JSONObject o = new JSONObject(value);
+              broadcastCarState(
+                o.optString("title", "ParkTube PWK"),
+                o.optBoolean("p", true),
+                o.optDouble("t", 0),
+                o.optDouble("d", 0)
+              );
+            }
+          } catch (Exception ignored) {}
+        });
+      }
+      handler.postDelayed(this, 1000);
+    }
+  };
+
   final Runnable driveTicker = new Runnable() {
     @Override public void run() {
       if (!driveMode || web == null) return;
@@ -111,6 +143,10 @@ public class MainActivity extends Activity {
 
     buildUi();
     configureWebView();
+
+    registerCarReceiverForAppLifetime();
+    handler.removeCallbacks(carStateTicker);
+    handler.post(carStateTicker);
 
     if (state == null) web.loadUrl(HOME); else web.restoreState(state);
   }
@@ -723,27 +759,17 @@ public class MainActivity extends Activity {
     if (web.canGoBack()) web.goBack(); else super.onBackPressed();
   }
 
-  @Override protected void onStart() {
-    super.onStart();
-    if (!carReceiverRegistered) {
-      IntentFilter f = new IntentFilter();
-      f.addAction("com.pwk.parktube.ACTION_PLAY");
-      f.addAction("com.pwk.parktube.ACTION_PAUSE");
-      f.addAction("com.pwk.parktube.ACTION_TOGGLE");
-      f.addAction("com.pwk.parktube.ACTION_NEXT");
-      f.addAction("com.pwk.parktube.ACTION_PREV");
-      if (Build.VERSION.SDK_INT >= 33) registerReceiver(carReceiver, f, Context.RECEIVER_NOT_EXPORTED);
-      else registerReceiver(carReceiver, f);
-      carReceiverRegistered = true;
-    }
-  }
-
-  @Override protected void onStop() {
-    if (carReceiverRegistered) {
-      try { unregisterReceiver(carReceiver); } catch (Exception ignored) {}
-      carReceiverRegistered = false;
-    }
-    super.onStop();
+  void registerCarReceiverForAppLifetime() {
+    if (carReceiverRegistered) return;
+    IntentFilter f = new IntentFilter();
+    f.addAction("com.pwk.parktube.ACTION_PLAY");
+    f.addAction("com.pwk.parktube.ACTION_PAUSE");
+    f.addAction("com.pwk.parktube.ACTION_TOGGLE");
+    f.addAction("com.pwk.parktube.ACTION_NEXT");
+    f.addAction("com.pwk.parktube.ACTION_PREV");
+    if (Build.VERSION.SDK_INT >= 33) registerReceiver(carReceiver, f, Context.RECEIVER_NOT_EXPORTED);
+    else registerReceiver(carReceiver, f);
+    carReceiverRegistered = true;
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -752,6 +778,10 @@ public class MainActivity extends Activity {
   }
 
   @Override protected void onDestroy() {
+    if (carReceiverRegistered) {
+      try { unregisterReceiver(carReceiver); } catch (Exception ignored) {}
+      carReceiverRegistered = false;
+    }
     handler.removeCallbacksAndMessages(null);
     if (web != null) {
       web.stopLoading();
