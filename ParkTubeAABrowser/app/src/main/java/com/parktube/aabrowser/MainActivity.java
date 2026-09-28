@@ -515,7 +515,6 @@ public class MainActivity extends Activity {
         customFrame.addView(view, new FrameLayout.LayoutParams(-1, -1));
         customFrame.setVisibility(View.VISIBLE);
         normalRoot.setVisibility(View.GONE);
-        showFullscreenClose();
         enterImmersive();
       }
 
@@ -554,7 +553,6 @@ public class MainActivity extends Activity {
     customViewCallback = null;
     normalRoot.setVisibility(View.VISIBLE);
     exitImmersive();
-    restoreFullscreenButton();
   }
 
   void enterImmersive() {
@@ -647,19 +645,16 @@ public class MainActivity extends Activity {
   void setDriveMode(boolean on) {
     driveMode = on;
     if (on) {
-      if (appFullscreen) exitAppFullscreen();
       if (customView != null) hideCustomView();
       normalRoot.setVisibility(View.GONE);
       drivePanel.setVisibility(View.VISIBLE);
-      fullscreenButton.setVisibility(View.GONE);
       handler.removeCallbacks(driveTicker);
       handler.post(driveTicker);
     } else {
       handler.removeCallbacks(driveTicker);
       drivePanel.setVisibility(View.GONE);
       normalRoot.setVisibility(View.VISIBLE);
-      restoreFullscreenButton();
-    }
+      }
   }
 
   void keepScreen(boolean on) {
@@ -677,7 +672,6 @@ public class MainActivity extends Activity {
 
   @Override public void onBackPressed() {
     if (driveMode) { setDriveMode(false); return; }
-    if (appFullscreen) { exitAppFullscreen(); return; }
     if (customView != null) { hideCustomView(); return; }
     if (web.canGoBack()) web.goBack(); else super.onBackPressed();
   }
